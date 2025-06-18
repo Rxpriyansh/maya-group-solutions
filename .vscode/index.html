@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya Groups of Solutions - IT Services Provider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #f0f4ff;
+        }
+        .login-bg {
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=1080&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .card, .bg-white.rounded-lg.shadow-md.p-8 {
+            border-radius: 16px !important;
+            box-shadow: 0 4px 24px rgba(59,130,246,0.08);
+            background: #fff;
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        .card:hover, .bg-white.rounded-lg.shadow-md.p-8:hover {
+            box-shadow: 0 8px 32px rgba(59,130,246,0.14);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .btn-primary, .bg-primary {
+            background: #3b82f6 !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 8px !important;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background: #2563eb !important;
+            box-shadow: 0 4px 16px rgba(59,130,246,0.15);
+            transform: translateY(-2px) scale(1.03);
+        }
+        input, textarea, select {
+            border-radius: 8px !important;
+            border: 1.5px solid #e0e7ff;
+            background: #f8fafc;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 2px #10b98133;
+            background: #f0fdfa;
+        }
+        .back-to-top {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success { background-color: #10b981; }
+        .toast.error { background-color: #ef4444; }
+        .toast.info { background-color: #3b82f6; }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+    <!-- Toast notifications container -->
+    <div id="toast-container"></div>
+    <!-- Login Form -->
+    <div id="login-section" class="min-h-screen flex">
+        <!-- Left Panel - Login Form -->
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Welcome Back</h1>
+                    <p class="text-gray-600">Please sign in to your account</p>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="login-email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="login-password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your password">
+                            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" name="remember" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                            <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:text-blue-600">Forgot password?</a>
+                    </div>
+                    <div id="error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Don't have an account? <a href="#" id="show-register" class="text-primary hover:text-blue-600 font-medium">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel - Background Image -->
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+    <!-- Register Section (Hidden by default) -->
+    <div id="register-section" class="min-h-screen flex hidden">
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Create Account</h1>
+                    <p class="text-gray-600">Join us to get started</p>
+                </div>
+                <form id="register-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                            <input type="text" id="first-name" name="first-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="First name">
+                        </div>
+                        <div>
+                            <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                            <input type="text" id="last-name" name="last-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Last name">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="register-email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="register-password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Create password">
+                            <button type="button" id="toggle-register-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="confirm-password" name="confirm-password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" name="terms" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                        <label for="terms" class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></label>
+                    </div>
+                    <div id="register-error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Create Account</span>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account? <a href="#" id="show-login" class="text-primary hover:text-blue-600 font-medium">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel - Background Image -->
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" class="navbar-logo flex items-center gap-2 text-3xl font-['Pacifico'] text-primary font-bold tracking-wide drop-shadow-sm">
+                <span class="inline-block align-middle"><i class="ri-sparkling-2-line text-2xl text-secondary"></i></span>
+                Maya
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-lg font-medium">
+                <a href="#home" class="navbar-link hover:text-primary transition-colors">Home</a>
+                <a href="#services" class="navbar-link hover:text-primary transition-colors">Services</a>
+                <a href="#solutions" class="navbar-link hover:text-primary transition-colors">Solutions</a>
+                <a href="#about" class="navbar-link hover:text-primary transition-colors">About Us</a>
+                <a href="#contact" class="navbar-link hover:text-primary transition-colors">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="https://x.com/MayaGroups" target="_blank" rel="noopener" aria-label="Twitter" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-twitter-x-line"></i></a>
+                <a href="https://www.instagram.com/ms_infotech.pvt.lmt?igsh=ZXk2bDlrMHZxZXA1" target="_blank" rel="noopener" aria-label="Instagram" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-instagram-line"></i></a>
+                <a href="#login-section" id="login-nav-btn" class="hidden md:block bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-full font-semibold shadow hover:from-blue-600 hover:to-green-600 transition-all duration-200 whitespace-nowrap">Login</a>
+                <button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <section id="home" class="hero-section relative min-h-[420px] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-transparent backdrop-blur-[2px] z-0"></div>
+      <div class="container mx-auto px-4 w-full relative z-10 flex flex-col items-center justify-center text-center py-20">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white drop-shadow-2xl mb-4 animate-fade-in-up">
+          <span class="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent shadow-lg px-2 rounded">Innovative IT Solutions</span>
+          <span class="block mt-2">for Your Business Growth</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-white/90 font-medium mb-10 animate-fade-in-up delay-100 max-w-3xl mx-auto shadow-lg rounded-lg px-2">
+          We deliver cutting-edge technology services tailored to your unique business needs.<br>
+          <span class="text-secondary font-semibold">Transform your operations with Maya Groups of Solutions.</span>
+        </p>
+        <div class="flex flex-wrap gap-6 justify-center animate-fade-in-up delay-200">
+          <a href="#services" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-full font-bold shadow-xl hover:scale-105 hover:from-blue-700 hover:to-green-600 transition-all duration-200 text-lg focus:outline-none focus:ring-4 focus:ring-primary/30">Our Services</a>
+          <a href="#contact" class="bg-white text-primary px-8 py-3 rounded-full font-bold shadow-xl border-2 border-primary hover:bg-primary hover:text-white hover:scale-105 transition-all duration-200 text-lg focus:outline-none focus:ring-4 focus:ring-primary/30">Schedule Consultation</a>
+        </div>
+      </div>
+      <style>
+        @keyframes fade-in-up {
+          0% { opacity: 0; transform: translateY(30px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(.4,0,.2,1) both; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+      </style>
+    </section>
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">We offer a comprehensive range of IT and management services designed to help your business thrive in the digital landscape.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-code-s-slash-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Web Development</h3>
+                    <p class="text-gray-600 mb-2">Custom, scalable, and secure websites and web applications built with the latest technologies to ensure your business stands out online.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Responsive website design</li>
+                        <li>E-commerce solutions</li>
+                        <li>API & backend integration</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-brush-line ri-xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">UI/UX Design</h3>
+                    <p class="text-gray-600 mb-2">Intuitive and visually appealing interfaces that enhance user experience and drive engagement across all platforms.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Wireframing & prototyping</li>
+                        <li>Mobile & web app design</li>
+                        <li>User journey mapping</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-smartphone-line ri-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">App Development</h3>
+                    <p class="text-gray-600 mb-2">Robust mobile and desktop applications tailored to your business needs, ensuring seamless performance and scalability.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Android & iOS apps</li>
+                        <li>Cross-platform solutions</li>
+                        <li>App maintenance & support</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-cloud-line ri-xl text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cloud Services</h3>
+                    <p class="text-gray-600 mb-2">Secure, scalable, and cost-effective cloud solutions to optimize your business operations and enable digital transformation.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Cloud migration & deployment</li>
+                        <li>DevOps & automation</li>
+                        <li>Cloud security & compliance</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-shield-check-line ri-xl text-pink-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cybersecurity Solutions</h3>
+                    <p class="text-gray-600 mb-2">Comprehensive security services to protect your data, systems, and reputation from evolving cyber threats.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Vulnerability assessment</li>
+                        <li>Penetration testing</li>
+                        <li>Security monitoring</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-bar-chart-2-line ri-xl text-yellow-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Data Analytics & BI</h3>
+                    <p class="text-gray-600 mb-2">Turn your data into actionable insights with our advanced analytics and business intelligence solutions.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Data visualization</li>
+                        <li>Business reporting</li>
+                        <li>Predictive analytics</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-briefcase-4-line ri-xl text-teal-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Management Solutions</h3>
+                    <p class="text-gray-600 mb-2">Strategic management consulting to streamline your business processes and drive growth.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>Business process optimization</li>
+                        <li>Change management</li>
+                        <li>Project management</li>
+                    </ul>
+                </div>
+                <div class="card p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-customer-service-2-line ri-xl text-indigo-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">IT Consulting & Support</h3>
+                    <p class="text-gray-600 mb-2">Expert IT guidance and ongoing support to ensure your technology investments deliver maximum value.</p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5">
+                        <li>IT strategy & planning</li>
+                        <li>Technical support</li>
+                        <li>Training & onboarding</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">About Us</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Maya Groups of Solutions is dedicated to delivering innovative IT and management solutions. Our mission is to empower businesses with technology and strategic guidance for sustainable growth.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="card p-6 text-center">
+            <i class="ri-flag-2-line text-3xl text-primary mb-4"></i>
+            <h3 class="font-bold text-lg mb-2">Our Mission</h3>
+            <p class="text-gray-600">To provide reliable, scalable, and innovative solutions that help our clients achieve their business goals.</p>
+          </div>
+          <div class="card p-6 text-center">
+            <i class="ri-eye-line text-3xl text-secondary mb-4"></i>
+            <h3 class="font-bold text-lg mb-2">Our Vision</h3>
+            <p class="text-gray-600">To be a global leader in IT and management consulting, recognized for our commitment to excellence and client success.</p>
+          </div>
+          <div class="card p-6 text-center">
+            <i class="ri-team-line text-3xl text-blue-500 mb-4"></i>
+            <h3 class="font-bold text-lg mb-2">Our Team</h3>
+            <p class="text-gray-600">A diverse group of experienced professionals passionate about technology, business, and delivering value to our clients.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Our Team Section -->
+<section id="team" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Team</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Meet the leadership behind Maya Groups of Solutions.</p>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-center gap-10">
+      <!-- CEO Card -->
+      <div class="bg-gray-50 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
+        <h3 class="text-xl font-bold mb-1">Priyansh Gandharv</h3>
+        <div class="text-primary font-semibold mb-2">CEO</div>
+        <a href="mailto:priyanshgandharv529@gmail.com" class="text-gray-600 hover:text-primary text-sm mb-4">priyanshgandharv529@gmail.com</a>
+        <div class="flex space-x-4 mt-2">
+          <a href="https://www.instagram.com/rx_priyansh?igsh=d2ZvdzFsejRhNmQ=" target="_blank" rel="noopener" aria-label="Instagram" class="text-pink-500 hover:text-pink-700 text-2xl"><i class="ri-instagram-line"></i></a>
+          <a href="https://www.linkedin.com/in/priyansh-gandharv-116001208" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-blue-600 hover:text-blue-800 text-2xl"><i class="ri-linkedin-box-line"></i></a>
+        </div>
+      </div>
+      <!-- CTO Card -->
+      <div class="bg-gray-50 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
+        <h3 class="text-xl font-bold mb-1">Om Chourasia</h3>
+        <div class="text-primary font-semibold mb-2">CTO</div>
+        <div class="flex space-x-4 mt-4">
+          <a href="https://www.instagram.com/milanchourasia_07?igsh=MWYwZHRzdXhpYWFydQ==" target="_blank" rel="noopener" aria-label="Instagram" class="text-pink-500 hover:text-pink-700 text-2xl"><i class="ri-instagram-line"></i></a>
+          <a href="https://www.linkedin.com/in/om-chourasia-658b9430a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-blue-600 hover:text-blue-800 text-2xl"><i class="ri-linkedin-box-line"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    <!-- Portfolio/Projects Section -->
+    <section id="portfolio" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Projects</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Explore some of our recent work across IT and management domains.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6 mb-8">
+          <button class="btn-primary px-4 py-2 text-sm" onclick="filterProjects('all')">All</button>
+          <button class="btn-primary px-4 py-2 text-sm" onclick="filterProjects('web')">Web</button>
+          <button class="btn-primary px-4 py-2 text-sm" onclick="filterProjects('app')">App</button>
+          <button class="btn-primary px-4 py-2 text-sm" onclick="filterProjects('management')">Management</button>
+        </div>
+        <div id="project-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="card project-card" data-category="web">
+            <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="Web Project" class="rounded mb-4 w-full h-48 object-cover">
+            <h3 class="font-bold text-lg mb-2">Corporate Website Redesign</h3>
+            <p class="text-gray-600 mb-2">A modern, responsive website for a global client, boosting engagement and conversions.</p>
+            <span class="inline-block bg-primary text-white text-xs px-3 py-1 rounded">Web</span>
+          </div>
+          <div class="card project-card" data-category="app">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" alt="App Project" class="rounded mb-4 w-full h-48 object-cover">
+            <h3 class="font-bold text-lg mb-2">Mobile Productivity App</h3>
+            <p class="text-gray-600 mb-2">A cross-platform app for task management and collaboration, built for scale.</p>
+            <span class="inline-block bg-secondary text-white text-xs px-3 py-1 rounded">App</span>
+          </div>
+          <div class="card project-card" data-category="management">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Management Project" class="rounded mb-4 w-full h-48 object-cover">
+            <h3 class="font-bold text-lg mb-2">Business Process Optimization</h3>
+            <p class="text-gray-600 mb-2">Consulting for a manufacturing firm to streamline operations and increase efficiency.</p>
+            <span class="inline-block bg-teal-500 text-white text-xs px-3 py-1 rounded">Management</span>
+          </div>
+          <!-- Add more project cards as needed -->
+        </div>
+      </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Hear from some of our satisfied clients and partners.</p>
+        </div>
+        <div id="testimonial-carousel" class="relative max-w-2xl mx-auto">
+          <div class="card p-8 text-center" id="testimonial-slide">
+            <p class="text-lg italic mb-4" id="testimonial-text">"Maya Groups of Solutions delivered our project on time and exceeded our expectations. Highly recommended!"</p>
+            <div class="flex items-center justify-center gap-3">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="w-12 h-12 rounded-full">
+              <div>
+                <div class="font-bold">Rahul Sharma</div>
+                <div class="text-xs text-gray-500">CEO, TechNova</div>
+              </div>
+            </div>
+          </div>
+          <button onclick="prevTestimonial()" class="absolute left-0 top-1/2 -translate-y-1/2 bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center shadow hover:bg-blue-700 transition"><i class="ri-arrow-left-s-line"></i></button>
+          <button onclick="nextTestimonial()" class="absolute right-0 top-1/2 -translate-y-1/2 bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center shadow hover:bg-blue-700 transition"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Newsletter Subscription -->
+    <section id="newsletter" class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="max-w-xl mx-auto text-center">
+          <h2 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+          <p class="text-gray-600 mb-6">Get the latest updates, insights, and offers from Maya Groups of Solutions.</p>
+          <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 justify-center">
+            <input type="email" id="newsletter-email" required placeholder="Your email address" class="flex-1 px-4 py-3 border border-gray-300 rounded focus:border-primary focus:ring-0">
+            <button type="submit" class="btn-primary px-6 py-3 font-medium">Subscribe</button>
+          </form>
+          <div id="newsletter-message" class="mt-4 text-sm"></div>
+        </div>
+      </div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact Us</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">We'd love to hear from you! Fill out the form below to get in touch with our team.</p>
+        </div>
+        <div class="max-w-lg mx-auto">
+          <form id="contact-form" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input type="text" id="name" name="name" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                  placeholder="Enter your name">
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input type="email" id="email" name="email" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                  placeholder="Enter your email">
+              </div>
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <input type="tel" id="phone" name="phone"
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                placeholder="Enter your phone number (optional)">
+            </div>
+            <div>
+              <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Interested Service</label>
+              <select id="service" name="service"
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0">
+                <option value="">Select a service</option>
+                <option value="web-development">Web Development</option>
+                <option value="app-development">App Development</option>
+                <option value="ui-ux-design">UI/UX Design</option>
+                <option value="cloud-services">Cloud Services</option>
+                <option value="cybersecurity">Cybersecurity Solutions</option>
+                <option value="data-analytics">Data Analytics & BI</option>
+                <option value="management-solutions">Management Solutions</option>
+                <option value="it-consulting">IT Consulting & Support</option>
+              </select>
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
+              <textarea id="message" name="message" rows="4" required
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                placeholder="Enter your message"></textarea>
+            </div>
+            <div id="contact-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+            <button type="submit"
+              class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+              <span>Send Message</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <script>
+    // Portfolio filter
+    function filterProjects(category) {
+      document.querySelectorAll('.project-card').forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    // Testimonials carousel
+    const testimonials = [
+      {
+        text: '"Maya Groups of Solutions delivered our project on time and exceeded our expectations. Highly recommended!"',
+        name: 'Rahul Sharma',
+        role: 'CEO, TechNova',
+        img: 'https://randomuser.me/api/portraits/men/32.jpg'
+      },
+      {
+        text: '"Professional, responsive, and innovative. Their team helped us scale our business with ease."',
+        name: 'Priya Mehta',
+        role: 'COO, FinEdge',
+        img: 'https://randomuser.me/api/portraits/women/44.jpg'
+      },
+      {
+        text: '"Great experience from start to finish. The management consulting was a game changer for us."',
+        name: 'Amit Verma',
+        role: 'Director, ManuFact',
+        img: 'https://randomuser.me/api/portraits/men/65.jpg'
+      }
+    ];
+    let testimonialIndex = 0;
+    function showTestimonial(idx) {
+      const t = testimonials[idx];
+      document.getElementById('testimonial-text').textContent = t.text;
+      document.querySelector('#testimonial-slide img').src = t.img;
+      document.querySelector('#testimonial-slide .font-bold').textContent = t.name;
+      document.querySelector('#testimonial-slide .text-xs').textContent = t.role;
+    }
+    function prevTestimonial() {
+      testimonialIndex = (testimonialIndex - 1 + testimonials.length) % testimonials.length;
+      showTestimonial(testimonialIndex);
+    }
+    function nextTestimonial() {
+      testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+      showTestimonial(testimonialIndex);
+    }
+    // Newsletter form
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterMessage = document.getElementById('newsletter-message');
+    newsletterForm?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletter-email').value.trim();
+      if (!email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
+        newsletterMessage.textContent = 'Please enter a valid email address.';
+        newsletterMessage.className = 'mt-4 text-sm text-red-500';
+        return;
+      }
+      newsletterMessage.textContent = 'Subscribing...';
+      newsletterMessage.className = 'mt-4 text-sm text-gray-500';
+      try {
+        const res = await fetch('http://localhost:5000/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          newsletterMessage.textContent = 'Thank you for subscribing!';
+          newsletterMessage.className = 'mt-4 text-sm text-green-600';
+          newsletterForm.reset();
+        } else {
+          newsletterMessage.textContent = data.error || 'Subscription failed.';
+          newsletterMessage.className = 'mt-4 text-sm text-red-500';
+        }
+      } catch (err) {
+        newsletterMessage.textContent = 'Server error. Please try again later.';
+        newsletterMessage.className = 'mt-4 text-sm text-red-500';
+      }
+    });
+    // Contact form integration
+    const contactForm = document.getElementById('contact-form');
+    const contactMessage = document.getElementById('contact-message');
+    contactForm?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone')?.value.trim();
+      const service = document.getElementById('service')?.value.trim();
+      const message = document.getElementById('message').value.trim();
+      if (!name || !email || !message) {
+        contactMessage.textContent = 'Please fill in all required fields.';
+        contactMessage.className = 'mt-4 text-sm text-red-500';
+        return;
+      }
+      contactMessage.textContent = 'Sending...';
+      contactMessage.className = 'mt-4 text-sm text-gray-500';
+      try {
+        const res = await fetch('http://localhost:5000/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, service, message })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          contactMessage.textContent = 'Thank you for your message! We will get back to you soon.';
+          contactMessage.className = 'mt-4 text-sm text-green-600';
+          contactForm.reset();
+        } else {
+          contactMessage.textContent = data.error || 'Submission failed.';
+          contactMessage.className = 'mt-4 text-sm text-red-500';
+        }
+      } catch (err) {
+        contactMessage.textContent = 'Server error. Please try again later.';
+        contactMessage.className = 'mt-4 text-sm text-red-500';
+      }
+    });
+    // Initialize first testimonial
+    showTestimonial(0);
+    </script>
+    <!-- ...existing code... -->
+</body>
+</html>

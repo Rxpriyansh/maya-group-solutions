@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya Groups of Solutions - IT Services Provider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .login-bg {
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=1080&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=800&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .testimonial-slider {
+            scroll-behavior: smooth;
+        }
+        
+        .custom-checkbox:checked + label:before {
+            content: '\2713';
+            color: white;
+            text-align: center;
+            line-height: 20px;
+        }
+        
+        .custom-radio:checked + label:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .custom-switch:checked + label:after {
+            transform: translateX(24px);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .back-to-top {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                background-position: 70% center;
+            }
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background-color: #10b981;
+        }
+        
+        .toast.error {
+            background-color: #ef4444;
+        }
+        
+        .toast.info {
+            background-color: #3b82f6;
+        }
+        
+        /* Admin panel styling */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .admin-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .admin-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+        
+        .admin-table tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+    <!-- Toast notifications container -->
+    <div id="toast-container"></div>
+    
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2 class="text-2xl font-bold">Admin Dashboard</h2>
+                <button id="close-admin" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-button">
+                    Close Admin Panel
+                </button>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Registered Users</h3>
+                <div class="overflow-x-auto">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <!-- Users will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-10">
+                <h3 class="text-xl font-bold mb-4">Contact Form Submissions</h3>
+                <div class="overflow-x-auto">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Service</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contact-table-body">
+                            <!-- Submissions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-10">
+                <h3 class="text-xl font-bold mb-4">Database Management</h3>
+                <div class="flex space-x-4">
+                    <button id="clear-users" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-button">
+                        Clear All Users
+                    </button>
+                    <button id="clear-contacts" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-button">
+                        Clear All Contacts
+                    </button>
+                    <button id="export-data" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-button">
+                        Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login-section" class="min-h-screen flex">
+        <!-- Left Panel - Login Form -->
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Welcome Back</h1>
+                    <p class="text-gray-600">Please sign in to your account</p>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your password">
+                            <button type="button" id="toggle-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" name="remember"
+                                class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                            <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:text-blue-600">Forgot password?</a>
+                    </div>
+                    <div id="error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Sign In</span>
+                        <i class="ri-arrow-right-line ml-2"></i>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Don't have an account?
+                        <a href="#" id="show-register" class="text-primary hover:text-blue-600 font-medium">Sign up</a>
+                    </p>
+                </div>
+                <div class="mt-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid grid-cols-3 gap-4">
+                        <button id="google-auth-btn" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded hover:border-gray-400 transition-colors">
+                            <i class="ri-google-fill text-[#EA4335]"></i>
+                        </button>
+                        <button class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded hover:border-gray-400 transition-colors">
+                            <i class="ri-apple-fill"></i>
+                        </button>
+                        <button class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded hover:border-gray-400 transition-colors">
+                            <i class="ri-github-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel - Background Image -->
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+
+    <!-- Register Section (Hidden by default) -->
+    <div id="register-section" class="min-h-screen flex hidden">
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Create Account</h1>
+                    <p class="text-gray-600">Join us to get started</p>
+                </div>
+                <form id="register-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                            <input type="text" id="first-name" name="first-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="First name">
+                        </div>
+                        <div>
+                            <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                            <input type="text" id="last-name" name="last-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Last name">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="register-email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="register-password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Create password">
+                            <button type="button" id="toggle-register-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Minimum 8 characters with at least one number</p>
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="confirm-password" name="confirm-password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" name="terms"
+                            class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                        <label for="terms" class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></label>
+                    </div>
+                    <div id="register-error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Create Account</span>
+                        <i class="ri-arrow-right-line ml-2"></i>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account?
+                        <a href="#" id="show-login" class="text-primary hover:text-blue-600 font-medium">Sign in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" class="text-2xl font-['Pacifico'] text-primary">Maya</a>
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="font-medium text-gray-700 hover:text-primary transition-colors">Home</a>
+                <a href="#services" class="font-medium text-gray-700 hover:text-primary transition-colors">Services</a>
+                <a href="#solutions" class="font-medium text-gray-700 hover:text-primary transition-colors">Solutions</a>
+                <a href="#about" class="font-medium text-gray-700 hover:text-primary transition-colors">About Us</a>
+                <a href="#contact" class="font-medium text-gray-700 hover:text-primary transition-colors">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#login-section" id="login-nav-btn" class="hidden md:block bg-primary text-white px-6 py-2 rounded-button font-medium hover:bg-blue-600 transition-colors whitespace-nowrap">Login</a>
+                <!-- Admin Access Button -->
+                <button id="admin-access-btn" class="bg-gray-800 text-white px-4 py-2 rounded-button text-sm">
+                    <i class="ri-database-2-line mr-2"></i>Admin
+                </button>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute w-full left-0 top-full hidden">
+            <div class="container mx-auto px-4 py-3">
+                <nav class="flex flex-col space-y-4 py-4">
+                    <a href="#home" class="font-medium text-gray-700 hover:text-primary transition-colors">Home</a>
+                    <a href="#services" class="font-medium text-gray-700 hover:text-primary transition-colors">Services</a>
+                    <a href="#solutions" class="font-medium text-gray-700 hover:text-primary transition-colors">Solutions</a>
+                    <a href="#about" class="font-medium text-gray-700 hover:text-primary transition-colors">About Us</a>
+                    <a href="#contact" class="font-medium text-gray-700 hover:text-primary transition-colors">Contact</a>
+                    <a href="#login-section" id="mobile-login-btn" class="bg-primary text-white px-6 py-2 rounded-button font-medium hover:bg-blue-600 transition-colors text-center whitespace-nowrap">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section min-h-[700px] pt-24 flex items-center">
+        <div class="container mx-auto px-4 w-full">
+            <div class="max-w-2xl text-white bg-black bg-opacity-30 p-8 rounded-lg backdrop-blur-sm">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Innovative IT Solutions for Your Business Growth</h1>
+                <p class="text-lg mb-8">We deliver cutting-edge technology services tailored to your unique business needs. Transform your operations with Maya Groups of Solutions.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#services" class="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-blue-600 transition-colors whitespace-nowrap">Our Services</a>
+                    <a href="#contact" class="bg-white text-primary px-8 py-3 rounded-button font-medium hover:bg-gray-100 transition-colors whitespace-nowrap">Schedule Consultation</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">We offer a comprehensive range of IT services designed to help your business thrive in the digital landscape.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-code-s-slash-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Custom Software Development</h3>
+                    <p class="text-gray-600 mb-4">Tailored software solutions designed to address your specific business challenges and streamline operations.</p>
+                    <button class="service-details-btn text-primary font-medium flex items-center hover:underline" data-service="service1">
+                        Learn More
+                        <i class="ri-arrow-right-line ml-1"></i>
+                    </button>
+                </div>
+                <!-- Service 2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-cloud-line ri-xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cloud Computing Services</h3>
+                    <p class="text-gray-600 mb-4">Secure and scalable cloud solutions that enable business agility, reduce costs, and enhance collaboration.</p>
+                    <button class="service-details-btn text-primary font-medium flex items-center hover:underline" data-service="service2">
+                        Learn More
+                        <i class="ri-arrow-right-line ml-1"></i>
+                    </button>
+                </div>
+                <!-- Service 3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-shield-check-line ri-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cybersecurity Solutions</h3>
+                    <p class="text-gray-600 mb-4">Comprehensive security services to protect your data, systems, and reputation from evolving cyber threats.</p>
+                    <button class="service-details-btn text-primary font-medium flex items-center hover:underline" data-service="service3">
+                        Learn More
+                        <i class="ri-arrow-right-line ml-1"></i>
+                    </button>
+                </div>
+                <!-- Service 4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="ri-database-2-line ri-xl text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Data Analytics & BI</h3>
+                    <p class="text-gray-600 mb-4">Turn your data into actionable insights with our advanced analytics and business intelligence solutions.</p>
+                    <button class="service-details-btn text-primary font-medium flex items-center hover:underline" data-service="service4">
+                        Learn More
+                        <i class="ri-arrow-right-line ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="solutions" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <!-- Left Side - Stats -->
+                <div class="w-full lg:w-1/2 bg-gray-50 rounded-lg p-8 shadow-md">
+                    <h2 class="text-3xl font-bold mb-8">Why Choose Maya Groups</h2>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="text-center">
+                            <div class="counter text-4xl font-bold text-primary mb-2" data-target="250">0</div>
+                            <p class="text-gray-600">Projects Completed</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="counter text-4xl font-bold text-primary mb-2" data-target="98">0</div>
+                            <p class="text-gray-600">Client Satisfaction %</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="counter text-4xl font-bold text-primary mb-2" data-target="15">0</div>
+                            <p class="text-gray-600">Years Experience</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="counter text-4xl font-bold text-primary mb-2" data-target="120">0</div>
+                            <p class="text-gray-600">IT Professionals</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Side - Benefits -->
+                <div class="w-full lg:w-1/2">
+                    <div class="space-y-8">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="ri-award-line ri-lg text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Industry Expertise</h3>
+                                <p class="text-gray-600">Our team brings deep industry knowledge and technical expertise to every project, ensuring solutions that address your specific challenges.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="ri-timer-line ri-lg text-secondary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Timely Delivery</h3>
+                                <p class="text-gray-600">We pride ourselves on meeting deadlines without compromising quality, keeping your projects on track and within budget.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="ri-customer-service-2-line ri-lg text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Dedicated Support</h3>
+                                <p class="text-gray-600">Our commitment to your success extends beyond project completion with ongoing support and maintenance services.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Ready to transform your business with innovative IT solutions? Contact us today to schedule a consultation.</p>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Contact Form -->
+                <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-8">
+                    <h3 class="text-2xl font-bold mb-6">Send Us a Message</h3>
+                    <form id="contact-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-gray-700 mb-2">Full Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0" placeholder="Your name">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0" placeholder="Your email">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="phone" class="block text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0" placeholder="Your phone number">
+                        </div>
+                        <div class="mb-6">
+                            <label for="service" class="block text-gray-700 mb-2">Service Interested In</label>
+                            <div class="relative">
+                                <select id="service" class="w-full px-4 py-2 border border-gray-300 rounded appearance-none focus:border-primary focus:ring-0 pr-8">
+                                    <option value="">Select a service</option>
+                                    <option value="software">Custom Software Development</option>
+                                    <option value="cloud">Cloud Computing Services</option>
+                                    <option value="security">Cybersecurity Solutions</option>
+                                    <option value="data">Data Analytics & BI</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                    <i class="ri-arrow-down-s-line text-gray-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-700 mb-2">Message</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0" placeholder="Tell us about your project or inquiry"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary text-white py-3 px-6 rounded-button font-medium hover:bg-blue-600 transition-colors whitespace-nowrap">Send Message</button>
+                    </form>
+                </div>
+                <!-- Contact Information and Map -->
+                <div class="w-full lg:w-1/2">
+                    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="ri-map-pin-line text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Our Location</h4>
+                                    <p class="text-gray-600">1234 Tech Park Avenue, Suite 500<br>San Francisco, CA 94107</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="ri-phone-line text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Phone Number</h4>
+                                    <p class="text-gray-600">9302931773</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="ri-mail-line text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Email Address</h4>
+                                    <p class="text-gray-600">info@mayagroups.com</p>
+                                    <p class="text-gray-600">support@mayagroups.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="font-bold text-gray-800 mb-4">Connect With Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
+                                    <i class="ri-facebook-fill"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
+                                    <i class="ri-twitter-fill"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
+                                    <i class="ri-linkedin-fill"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
+                                    <i class="ri-instagram-fill"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Map -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden h-80">
+                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('https://maps.googleapis.com/maps/api/staticmap?center=1234+Tech+Park+Avenue,San+Francisco,CA&zoom=14&size=600x300&maptype=roadmap&markers=color:red%7C1234+Tech+Park+Avenue,San+Francisco,CA&key=YOUR_API_KEY');"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <a href="#" class="text-2xl font-['Pacifico'] text-white mb-6 block">Maya</a>
+                    <p class="text-gray-400 mb-6">Maya Groups of Solutions is a leading IT service provider specializing in custom software development, cloud solutions, and digital transformation.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="ri-facebook-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="ri-twitter-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="ri-linkedin-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="ri-instagram-fill ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a></li>
+                        <li><a href="#solutions" class="text-gray-400 hover:text-white transition-colors">Solutions</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Services -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Our Services</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Custom Software Development</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cloud Computing Services</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cybersecurity Solutions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Data Analytics & BI</a></li>
+                    </ul>
+                </div>
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to our newsletter to receive updates and insights on the latest technology trends.</p>
+                    <form class="mb-4">
+                        <div class="flex">
+                            <input type="email" placeholder="Your email address" class="w-full px-4 py-2 rounded-l-button border-none text-gray-800">
+                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-button hover:bg-blue-600 transition-colors whitespace-nowrap">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="border-gray-700 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 Maya Groups of Solutions. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg z-50 whitespace-nowrap">
+        <i class="ri-arrow-up-line ri-lg"></i>
+    </button>
+
+    <script>
+        // Database implementation using IndexedDB
+        class MayaDatabase {
+            constructor() {
+                this.dbName = "MayaGroupsDB";
+                this.dbVersion = 1;
+                this.db = null;
+            }
+            
+            async init() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.dbVersion);
+                    
+                    request.onerror = (event) => {
+                        console.error("Database error:", event.target.error);
+                        reject(event.target.error);
+                    };
+                    
+                    request.onsuccess = (event) => {
+                        this.db = event.target.result;
+                        resolve(this.db);
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        
+                        // Create users store
+                        if (!db.objectStoreNames.contains('users')) {
+                            const usersStore = db.createObjectStore('users', { keyPath: 'email' });
+                            usersStore.createIndex('name', 'name', { unique: false });
+                        }
+                        
+                        // Create contacts store
+                        if (!db.objectStoreNames.contains('contacts')) {
+                            const contactsStore = db.createObjectStore('contacts', { autoIncrement: true });
+                            contactsStore.createIndex('email', 'email', { unique: false });
+                            contactsStore.createIndex('date', 'date', { unique: false });
+                        }
+                    };
+                });
+            }
+            
+            async addUser(user) {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['users'], 'readwrite');
+                    const store = transaction.objectStore('users');
+                    
+                    const request = store.add({
+                        name: `${user.firstName} ${user.lastName}`,
+                        email: user.email,
+                        password: user.password,
+                        phone: '',
+                        date: new Date().toISOString()
+                    });
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async getUserByEmail(email) {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['users'], 'readonly');
+                    const store = transaction.objectStore('users');
+                    
+                    const request = store.get(email);
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async addContact(contact) {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    
+                    const request = store.add({
+                        name: contact.name,
+                        email: contact.email,
+                        phone: contact.phone,
+                        service: contact.service,
+                        message: contact.message,
+                        date: new Date().toISOString()
+                    });
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async getAllUsers() {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['users'], 'readonly');
+                    const store = transaction.objectStore('users');
+                    
+                    const request = store.getAll();
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async getAllContacts() {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['contacts'], 'readonly');
+                    const store = transaction.objectStore('contacts');
+                    
+                    const request = store.getAll();
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async clearUsers() {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['users'], 'readwrite');
+                    const store = transaction.objectStore('users');
+                    
+                    const request = store.clear();
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async clearContacts() {
+                return new Promise((resolve, reject) => {
+                    if (!this.db) {
+                        reject("Database not initialized");
+                        return;
+                    }
+                    
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    
+                    const request = store.clear();
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+        }
+        
+        // Initialize the database
+        const mayaDB = new MayaDatabase();
+        
+        // Toast notification function
+        function showToast(message, type = 'info', duration = 3000) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            
+            // Trigger reflow to enable animation
+            toast.offsetWidth;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, duration);
+        }
+        
+        // Main application logic
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await mayaDB.init();
+                console.log("Database initialized successfully");
+            } catch (error) {
+                console.error("Failed to initialize database:", error);
+                showToast("Database initialization failed", 'error');
+            }
+            
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', function() {
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenuButton.innerHTML = '<i class="ri-close-line ri-lg"></i>';
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+                }
+            });
+            
+            // Login/Register Toggle
+            const showRegister = document.getElementById('show-register');
+            const showLogin = document.getElementById('show-login');
+            const loginSection = document.getElementById('login-section');
+            const registerSection = document.getElementById('register-section');
+            const loginNavBtn = document.getElementById('login-nav-btn');
+            const mobileLoginBtn = document.getElementById('mobile-login-btn');
+            
+            showRegister?.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginSection.classList.add('hidden');
+                registerSection.classList.remove('hidden');
+            });
+            
+            showLogin?.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerSection.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+            });
+            
+            loginNavBtn?.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerSection.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            });
+            
+            mobileLoginBtn?.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerSection.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            });
+            
+            // Toggle password visibility
+            const togglePassword = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('password');
+            const toggleRegisterPassword = document.getElementById('toggle-register-password');
+            const registerPasswordInput = document.getElementById('register-password');
+            
+            togglePassword?.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.innerHTML = type === 'password' ?
+                    '<i class="ri-eye-off-line"></i>' :
+                    '<i class="ri-eye-line"></i>';
+            });
+            
+            toggleRegisterPassword?.addEventListener('click', function() {
+                const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                registerPasswordInput.setAttribute('type', type);
+                toggleRegisterPassword.innerHTML = type === 'password' ?
+                    '<i class="ri-eye-off-line"></i>' :
+                    '<i class="ri-eye-line"></i>';
+            });
+            
+            // Login Form
+            const loginForm = document.getElementById('login-form');
+            const errorMessage = document.getElementById('error-message');
+            
+            loginForm?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    const user = await mayaDB.getUserByEmail(email);
+                    
+                    if (user && user.password === password) {
+                        showToast('Login successful!', 'success');
+                        errorMessage.classList.add('hidden');
+                        // Reset form
+                        loginForm.reset();
+                    } else {
+                        throw new Error('Invalid email or password');
+                    }
+                } catch (error) {
+                    errorMessage.textContent = error.message;
+                    errorMessage.classList.remove('hidden');
+                    showToast('Login failed', 'error');
+                }
+            });
+            
+            // Registration Form
+            const registerForm = document.getElementById('register-form');
+            const registerErrorMessage = document.getElementById('register-error-message');
+            
+            registerForm?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const terms = document.getElementById('terms').checked;
+                
+                try {
+                    // Basic validation
+                    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+                        throw new Error('Please fill in all fields');
+                    }
+                    
+                    if (!terms) {
+                        throw new Error('You must agree to the terms and conditions');
+                    }
+                    
+                    // Email validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        throw new Error('Please enter a valid email address');
+                    }
+                    
+                    // Password validation
+                    if (password.length < 8) {
+                        throw new Error('Password must be at least 8 characters');
+                    }
+                    
+                    if (!/\d/.test(password)) {
+                        throw new Error('Password must contain at least one number');
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        throw new Error('Passwords do not match');
+                    }
+                    
+                    // Check if user already exists
+                    const existingUser = await mayaDB.getUserByEmail(email);
+                    if (existingUser) {
+                        throw new Error('Email already registered');
+                    }
+                    
+                    // Add user to database
+                    await mayaDB.addUser({
+                        firstName,
+                        lastName,
+                        email,
+                        password
+                    });
+                    
+                    // Show success message
+                    showToast('Registration successful!', 'success');
+                    registerForm.reset();
+                    registerSection.classList.add('hidden');
+                    loginSection.classList.remove('hidden');
+                    registerErrorMessage.classList.add('hidden');
+                    
+                } catch (error) {
+                    registerErrorMessage.textContent = error.message;
+                    registerErrorMessage.classList.remove('hidden');
+                    showToast(error.message, 'error');
+                }
+            });
+            
+            // Contact Form
+            const contactForm = document.getElementById('contact-form');
+            contactForm?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const service = document.getElementById('service').value;
+                const message = document.getElementById('message').value;
+                
+                try {
+                    // Basic validation
+                    if (!name || !email || !message) {
+                        throw new Error('Please fill in all required fields');
+                    }
+                    
+                    // Email validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        throw new Error('Please enter a valid email address');
+                    }
+                    
+                    // Save contact to database
+                    await mayaDB.addContact({
+                        name,
+                        email,
+                        phone,
+                        service,
+                        message
+                    });
+                    
+                    // Show success message
+                    showToast('Thank you for your message! We will get back to you soon.', 'success');
+                    contactForm.reset();
+                    
+                } catch (error) {
+                    showToast(error.message, 'error');
+                }
+            });
+            
+            // Admin Panel
+            const adminPanel = document.getElementById('admin-panel');
+            const adminAccessBtn = document.getElementById('admin-access-btn');
+            const closeAdminBtn = document.getElementById('close-admin');
+            const clearUsersBtn = document.getElementById('clear-users');
+            const clearContactsBtn = document.getElementById('clear-contacts');
+            const exportDataBtn = document.getElementById('export-data');
+            
+            adminAccessBtn?.addEventListener('click', async function() {
+                try {
+                    // Load data
+                    const users = await mayaDB.getAllUsers();
+                    const contacts = await mayaDB.getAllContacts();
+                    
+                    // Populate users table
+                    const userTableBody = document.getElementById('user-table-body');
+                    userTableBody.innerHTML = '';
+                    
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.email.substring(0, 8)}...</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone || 'N/A'}</td>
+                            <td>${new Date(user.date).toLocaleDateString()}</td>
+                        `;
+                        userTableBody.appendChild(row);
+                    });
+                    
+                    // Populate contacts table
+                    const contactTableBody = document.getElementById('contact-table-body');
+                    contactTableBody.innerHTML = '';
+                    
+                    contacts.forEach(contact => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${contact.id}</td>
+                            <td>${contact.name}</td>
+                            <td>${contact.email}</td>
+                            <td>${contact.service || 'N/A'}</td>
+                            <td>${contact.message.substring(0, 30)}...</td>
+                            <td>${new Date(contact.date).toLocaleDateString()}</td>
+                        `;
+                        contactTableBody.appendChild(row);
+                    });
+                    
+                    // Show admin panel
+                    adminPanel.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error("Failed to load admin data:", error);
+                    showToast("Failed to load admin data", 'error');
+                }
+            });
+            
+            closeAdminBtn?.addEventListener('click', function() {
+                adminPanel.style.display = 'none';
+            });
+            
+            clearUsersBtn?.addEventListener('click', async function() {
+                if (confirm("Are you sure you want to delete all users?")) {
+                    try {
+                        await mayaDB.clearUsers();
+                        showToast('All users deleted', 'success');
+                        // Refresh the admin panel
+                        adminAccessBtn.click();
+                    } catch (error) {
+                        showToast('Failed to delete users', 'error');
+                    }
+                }
+            });
+            
+            clearContactsBtn?.addEventListener('click', async function() {
+                if (confirm("Are you sure you want to delete all contact submissions?")) {
+                    try {
+                        await mayaDB.clearContacts();
+                        showToast('All contacts deleted', 'success');
+                        // Refresh the admin panel
+                        adminAccessBtn.click();
+                    } catch (error) {
+                        showToast('Failed to delete contacts', 'error');
+                    }
+                }
+            });
+            
+            exportDataBtn?.addEventListener('click', async function() {
+                try {
+                    const users = await mayaDB.getAllUsers();
+                    const contacts = await mayaDB.getAllContacts();
+                    
+                    const data = {
+                        users,
+                        contacts
+                    };
+                    
+                    const dataStr = JSON.stringify(data, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = 'maya-groups-data.json';
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                    
+                    showToast('Data exported successfully', 'success');
+                    
+                } catch (error) {
+                    showToast('Failed to export data', 'error');
+                }
+            });
+            
+            // Back to Top Button
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Smooth Scroll
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
