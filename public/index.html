@@ -639,8 +639,13 @@
         if (errorDiv) {
           errorDiv.classList.add('hidden');
         }
+        // Use full backend URL in production, relative in dev
+        const backendUrl =
+          window.location.hostname.includes('vercel.app') || window.location.hostname.includes('maya-groups')
+            ? 'https://maya-groups-backend.onrender.com/api/contact' // <-- Your actual Render backend URL
+            : '/api/contact';
         try {
-          const res = await fetch('/api/contact', {
+          const res = await fetch(backendUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone, service, message })
