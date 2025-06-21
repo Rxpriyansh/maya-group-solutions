@@ -34,10 +34,556 @@
         }
     </script>
     <style>
-        /* ...existing code... */
+        body {
+            background: #f0f4ff;
+        }
+        .login-bg {
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=1080&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .card, .bg-white.rounded-lg.shadow-md.p-8 {
+            border-radius: 16px !important;
+            box-shadow: 0 4px 24px rgba(59,130,246,0.08);
+            background: #fff;
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        .card:hover, .bg-white.rounded-lg.shadow-md.p-8:hover {
+            box-shadow: 0 8px 32px rgba(59,130,246,0.14);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .btn-primary, .bg-primary {
+            background: #3b82f6 !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 8px !important;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background: #2563eb !important;
+            box-shadow: 0 4px 16px rgba(59,130,246,0.15);
+            transform: translateY(-2px) scale(1.03);
+        }
+        input, textarea, select {
+            border-radius: 8px !important;
+            border: 1.5px solid #e0e7ff;
+            background: #f8fafc;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 2px #10b98133;
+            background: #f0fdfa;
+        }
+        .back-to-top {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success { background-color: #10b981; }
+        .toast.error { background-color: #ef4444; }
+        .toast.info { background-color: #3b82f6; }
     </style>
 </head>
 <body class="font-sans text-gray-800">
-    <!-- ...existing code... -->
+    <!-- Toast notifications container -->
+    <div id="toast-container"></div>
+    <!-- Login Form -->
+    <div id="login-section" class="min-h-screen flex">
+        <!-- Left Panel - Login Form -->
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Welcome Back</h1>
+                    <p class="text-gray-600">Please sign in to your account</p>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="login-email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="login-password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your password">
+                            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" name="remember" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                            <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:text-blue-600">Forgot password?</a>
+                    </div>
+                    <div id="error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Don't have an account? <a href="#" id="show-register" class="text-primary hover:text-blue-600 font-medium">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel - Background Image -->
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+    <!-- Register Section (Hidden by default) -->
+    <div id="register-section" class="min-h-screen flex hidden">
+        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
+            <div class="max-w-sm mx-auto w-full">
+                <div class="text-center mb-8">
+                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+                    <h1 class="text-2xl font-bold mt-6 mb-2">Create Account</h1>
+                    <p class="text-gray-600">Join us to get started</p>
+                </div>
+                <form id="register-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                            <input type="text" id="first-name" name="first-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="First name">
+                        </div>
+                        <div>
+                            <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                            <input type="text" id="last-name" name="last-name" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Last name">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="register-email" name="email" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="register-password" name="password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Create password">
+                            <button type="button" id="toggle-register-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="confirm-password" name="confirm-password" required
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                                placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" name="terms" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
+                        <label for="terms" class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></label>
+                    </div>
+                    <div id="register-error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                        <span>Create Account</span>
+                    </button>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account? <a href="#" id="show-login" class="text-primary hover:text-blue-600 font-medium">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel - Background Image -->
+        <div class="hidden md:block flex-1 login-bg"></div>
+    </div>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" class="navbar-logo flex items-center gap-2 text-3xl font-['Pacifico'] text-primary font-bold tracking-wide drop-shadow-sm">
+                <span class="inline-block align-middle"><i class="ri-sparkling-2-line text-2xl text-secondary"></i></span>
+                Maya
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-lg font-medium">
+                <a href="#home" class="navbar-link hover:text-primary transition-colors">Home</a>
+                <a href="#services" class="navbar-link hover:text-primary transition-colors">Services</a>
+                <a href="#solutions" class="navbar-link hover:text-primary transition-colors">Solutions</a>
+                <a href="#about" class="navbar-link hover:text-primary transition-colors">About Us</a>
+                <a href="#contact" class="navbar-link hover:text-primary transition-colors">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="https://x.com/MayaGroups" target="_blank" rel="noopener" aria-label="Twitter" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-twitter-x-line"></i></a>
+                <a href="https://www.instagram.com/ms_infotech.pvt.lmt?igsh=ZXk2bDlrMHZxZXA1" target="_blank" rel="noopener" aria-label="Instagram" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-instagram-line"></i></a>
+                <a href="#login-section" id="login-nav-btn" class="hidden md:block bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-full font-semibold shadow hover:from-blue-600 hover:to-green-600 transition-all duration-200 whitespace-nowrap">Login</a>
+                <button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <section id="home" class="hero-section relative min-h-[420px] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-transparent backdrop-blur-[2px] z-0"></div>
+      <div class="container mx-auto px-4 w-full relative z-10 flex flex-col items-center justify-center text-center py-20">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white drop-shadow-2xl mb-4 animate-fade-in-up">
+          <span class="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent shadow-lg px-2 rounded">Innovative IT Solutions</span>
+          <span class="block mt-2">for Your Business Growth</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-white/90 font-medium mb-10 animate-fade-in-up delay-100 max-w-3xl mx-auto shadow-lg rounded-lg px-2">
+          We deliver cutting-edge technology services tailored to your unique business needs.<br>
+          <span class="text-secondary font-semibold">Transform your operations with Maya Groups of Solutions.</span>
+        </p>
+        <div class="flex flex-wrap gap-6 justify-center animate-fade-in-up delay-200">
+          <a href="#services" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-full font-bold shadow-xl hover:scale-105 hover:from-blue-700 hover:to-green-600 transition-all duration-200 text-lg focus:outline-none focus:ring-4 focus:ring-primary/30">Our Services</a>
+          <a href="#contact" class="bg-white text-primary px-8 py-3 rounded-full font-bold shadow-xl border-2 border-primary hover:bg-primary hover:text-white hover:scale-105 transition-all duration-200 text-lg focus:outline-none focus:ring-4 focus:ring-primary/30">Schedule Consultation</a>
+        </div>
+      </div>
+      <style>
+        @keyframes fade-in-up {
+          0% { opacity: 0; transform: translateY(30px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(.4,0,.2,1) both; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+      </style>
+    </section>
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">Our Services</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">Explore the wide range of IT services we offer to help your business thrive in the digital age.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Service Card 1 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-computer-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">IT Consulting</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Expert guidance to help you navigate the complex world of technology and make informed decisions for your business.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Service Card 2 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-code-s-slash-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Web Development</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Building responsive and scalable websites that provide seamless user experiences across all devices.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Service Card 3 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-apps-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Mobile App Development</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Creating intuitive and high-performance mobile applications for iOS and Android platforms.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Service Card 4 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-shield-check-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Cybersecurity</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Protecting your business from cyber threats with proactive security measures and expert monitoring.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Service Card 5 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-bar-chart-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Data Analytics</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Turning data into actionable insights with advanced analytics solutions tailored to your business.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Service Card 6 -->
+          <div class="bg-gray-50 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-rocket-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Cloud Solutions</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Scalable and secure cloud solutions to enhance collaboration, flexibility, and business continuity.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">Our Solutions</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">Discover the innovative solutions we provide to solve your business challenges and drive growth.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Solution Card 1 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-lightbulb-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Business Automation</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Streamline your operations and improve efficiency with our custom automation solutions.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Solution Card 2 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-paint-brush-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">UI/UX Design</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Enhance user satisfaction and engagement with our intuitive and visually appealing design solutions.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Solution Card 3 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-global-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">SEO Services</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Improve your online visibility and attract more customers with our expert SEO services.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Solution Card 4 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-customer-service-2-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Customer Support</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Provide exceptional customer service and support with our tailored solutions.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Solution Card 5 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-secure-payment-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">Payment Solutions</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Seamless and secure payment processing solutions to enhance your business transactions.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+          <!-- Solution Card 6 -->
+          <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white mr-4">
+                <i class="ri-settings-3-line text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800">IT Support</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Reliable IT support and maintenance services to keep your business running smoothly.</p>
+            <a href="#" class="text-primary font-medium hover:underline">Learn more</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">About Us</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">Learn more about our mission, vision, and the values that drive us to deliver exceptional IT solutions.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="flex flex-col justify-center">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Mission</h3>
+            <p class="text-gray-600 mb-6">To empower businesses with innovative technology solutions that drive growth, efficiency, and success in the digital age.</p>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Vision</h3>
+            <p class="text-gray-600 mb-6">To be a global leader in providing cutting-edge IT solutions, recognized for our expertise, innovation, and commitment to customer success.</p>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Values</h3>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+              <li>Integrity: We uphold the highest standards of integrity in all our actions.</li>
+              <li>Customer Commitment: We develop relationships that make a positive difference in our customers' lives.</li>
+              <li>Quality: We provide outstanding products and unsurpassed service that deliver premium value to our customers.</li>
+              <li>Teamwork: We work together, across boundaries, to meet the needs of our customers and help the company win.</li>
+              <li>Respect for People: We value our people, encourage their development, and reward their performance.</li>
+              <li>Good Citizenship: We are good citizens in the communities in which we live and work.</li>
+            </ul>
+          </div>
+          <div class="hidden md:flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1517436079784-4b735b8b8f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="About Us" class="rounded-lg shadow-lg">
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">Contact Us</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">Get in touch with us to discuss your project requirements, ask questions, or request a quote.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Get in Touch</h3>
+            <form id="contact-form" class="space-y-6">
+              <div>
+                <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input type="text" id="contact-name" name="name" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                  placeholder="Enter your full name">
+              </div>
+              <div>
+                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input type="email" id="contact-email" name="email" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                  placeholder="Enter your email address">
+              </div>
+              <div>
+                <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <textarea id="contact-message" name="message" rows="4" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
+                  placeholder="Enter your message"></textarea>
+              </div>
+              <div id="contact-error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
+              <button type="submit"
+                class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
+                <span>Send Message</span>
+              </button>
+            </form>
+          </div>
+          <div class="hidden md:flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1498050108023-c524d4d3c6d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Contact Us" class="rounded-lg shadow-lg">
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="py-8 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="text-center md:text-left mb-4 md:mb-0">
+            <a href="#" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+            <p class="text-gray-600 mt-2">© 2023 Maya Groups of Solutions. All rights reserved.</p>
+          </div>
+          <div class="flex flex-wrap gap-8 justify-center md:justify-end">
+            <a href="#home" class="text-gray-600 hover:text-primary transition-colors">Home</a>
+            <a href="#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
+            <a href="#solutions" class="text-gray-600 hover:text-primary transition-colors">Solutions</a>
+            <a href="#about" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
+            <a href="#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-50 hidden">
+      <div class="flex flex-col h-full">
+        <div class="flex-1 overflow-auto">
+          <div class="p-4">
+            <a href="#" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
+          </div>
+          <div class="px-4 py-2">
+            <a href="#home" class="block text-gray-800 hover:text-primary transition-colors py-2">Home</a>
+            <a href="#services" class="block text-gray-800 hover:text-primary transition-colors py-2">Services</a>
+            <a href="#solutions" class="block text-gray-800 hover:text-primary transition-colors py-2">Solutions</a>
+            <a href="#about" class="block text-gray-800 hover:text-primary transition-colors py-2">About Us</a>
+            <a href="#contact" class="block text-gray-800 hover:text-primary transition-colors py-2">Contact</a>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex space-x-4">
+              <a href="https://x.com/MayaGroups" target="_blank" rel="noopener" aria-label="Twitter" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-twitter-x-line"></i></a>
+              <a href="https://www.instagram.com/ms_infotech.pvt.lmt?igsh=ZXk2bDlrMHZxZXA1" target="_blank" rel="noopener" aria-label="Instagram" class="text-primary hover:text-secondary text-2xl transition-colors"><i class="ri-instagram-line"></i></a>
+            </div>
+            <a href="#login-section" id="login-nav-btn-mobile" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full font-semibold shadow hover:from-blue-600 hover:to-green-600 transition-all duration-200 whitespace-nowrap">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const loginNavBtnMobile = document.getElementById('login-nav-btn-mobile');
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      // Close mobile menu when clicking outside
+      window.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+      // Show login section in mobile menu
+      loginNavBtnMobile.addEventListener('click', () => {
+        document.getElementById('login-section').scrollIntoView({ behavior: 'smooth' });
+        mobileMenu.classList.add('hidden');
+      });
+    </script>
 </body>
 </html>

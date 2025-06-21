@@ -657,7 +657,8 @@
       newsletterMessage.textContent = 'Subscribing...';
       newsletterMessage.className = 'mt-4 text-sm text-gray-500';
       try {
-        const res = await fetch('http://localhost:5000/api/newsletter', {
+        // Update this URL to your Render backend endpoint
+        const res = await fetch('https://your-backend.onrender.com/api/newsletter', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })
@@ -694,7 +695,8 @@
       contactMessage.textContent = 'Sending...';
       contactMessage.className = 'mt-4 text-sm text-gray-500';
       try {
-        const res = await fetch('http://localhost:5000/api/contact', {
+        // Update this URL to your Render backend endpoint
+        const res = await fetch('https://your-backend.onrender.com/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, phone, service, message })
