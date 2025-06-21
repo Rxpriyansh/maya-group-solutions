@@ -120,131 +120,26 @@
 <body class="font-sans text-gray-800">
     <!-- Toast notifications container -->
     <div id="toast-container"></div>
-    <!-- Login Form -->
-    <div id="login-section" class="min-h-screen flex">
-        <!-- Left Panel - Login Form -->
-        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
-            <div class="max-w-sm mx-auto w-full">
-                <div class="text-center mb-8">
-                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
-                    <h1 class="text-2xl font-bold mt-6 mb-2">Welcome Back</h1>
-                    <p class="text-gray-600">Please sign in to your account</p>
-                </div>
-                <form id="login-form" class="space-y-6">
-                    <div>
-                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <div class="relative">
-                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="email" id="login-email" name="email" required
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Enter your email">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                        <div class="relative">
-                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="password" id="login-password" name="password" required
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Enter your password">
-                            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                <i class="ri-eye-off-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="remember" name="remember" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
-                            <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
-                        </div>
-                        <a href="#" class="text-sm text-primary hover:text-blue-600">Forgot password?</a>
-                    </div>
-                    <div id="error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
-                    <button type="submit"
-                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
-                        <span>Sign In</span>
-                    </button>
-                </form>
-                <div class="mt-6 text-center">
-                    <p class="text-gray-600">Don't have an account? <a href="#" id="show-register" class="text-primary hover:text-blue-600 font-medium">Sign up</a></p>
-                </div>
-            </div>
-        </div>
-        <!-- Right Panel - Background Image -->
-        <div class="hidden md:block flex-1 login-bg"></div>
-    </div>
-    <!-- Register Section (Hidden by default) -->
-    <div id="register-section" class="min-h-screen flex hidden">
-        <div class="w-full md:w-[480px] bg-white p-8 flex flex-col justify-center">
-            <div class="max-w-sm mx-auto w-full">
-                <div class="text-center mb-8">
-                    <a href="/" class="text-3xl font-['Pacifico'] text-primary inline-block">Maya groups of solutions</a>
-                    <h1 class="text-2xl font-bold mt-6 mb-2">Create Account</h1>
-                    <p class="text-gray-600">Join us to get started</p>
-                </div>
-                <form id="register-form" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                            <input type="text" id="first-name" name="first-name" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="First name">
-                        </div>
-                        <div>
-                            <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                            <input type="text" id="last-name" name="last-name" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Last name">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <div class="relative">
-                            <i class="ri-mail-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="email" id="register-email" name="email" required
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Enter your email">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                        <div class="relative">
-                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="password" id="register-password" name="password" required
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Create password">
-                            <button type="button" id="toggle-register-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                <i class="ri-eye-off-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-                        <div class="relative">
-                            <i class="ri-lock-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="password" id="confirm-password" name="confirm-password" required
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:border-primary focus:ring-0"
-                                placeholder="Confirm password">
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="terms" name="terms" class="w-4 h-4 border-gray-300 rounded text-primary focus:ring-0">
-                        <label for="terms" class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a></label>
-                    </div>
-                    <div id="register-error-message" class="hidden bg-red-50 text-red-500 p-3 rounded text-sm"></div>
-                    <button type="submit"
-                        class="w-full bg-primary text-white py-2 px-4 rounded-button font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
-                        <span>Create Account</span>
-                    </button>
-                </form>
-                <div class="mt-6 text-center">
-                    <p class="text-gray-600">Already have an account? <a href="#" id="show-login" class="text-primary hover:text-blue-600 font-medium">Sign in</a></p>
-                </div>
-            </div>
-        </div>
-        <!-- Right Panel - Background Image -->
-        <div class="hidden md:block flex-1 login-bg"></div>
-    </div>
+    <!-- Attractive Banner -->
+    <section class="w-full h-[320px] md:h-[400px] flex items-center justify-center bg-gradient-to-r from-primary to-secondary relative overflow-hidden shadow-lg mb-12">
+      <div class="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center"></div>
+      <div class="relative z-10 flex flex-col items-center justify-center w-full">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white drop-shadow-2xl text-center animate-fade-in-up tracking-wide" style="font-family: 'Pacifico', cursive;">
+          Maya Groups of Solutions
+        </h1>
+        <p class="mt-6 text-lg md:text-2xl text-white/90 font-medium text-center max-w-2xl animate-fade-in-up delay-100 shadow-lg rounded-lg px-2">
+          Empowering your business with innovative IT, web, and digital solutions for a brighter tomorrow.
+        </p>
+      </div>
+      <style>
+        @keyframes fade-in-up {
+          0% { opacity: 0; transform: translateY(30px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(.4,0,.2,1) both; }
+        .delay-100 { animation-delay: 0.1s; }
+      </style>
+    </section>
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur shadow-md">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
