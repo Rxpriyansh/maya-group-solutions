@@ -617,5 +617,61 @@
         mobileMenu.classList.add('hidden');
       });
     </script>
+    <script>
+    // Contact form integration
+    const contactForm = document.querySelector('#contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = contactForm.querySelector('[name="name"]').value.trim();
+        const email = contactForm.querySelector('[name="email"]').value.trim();
+        const message = contactForm.querySelector('[name="message"]').value.trim();
+        const phone = contactForm.querySelector('[name="phone"]')?.value.trim() || '';
+        const service = contactForm.querySelector('[name="service"]')?.value.trim() || '';
+        const errorDiv = document.getElementById('contact-error-message') || document.getElementById('contact-message');
+        if (!name || !email || !message) {
+          if (errorDiv) {
+            errorDiv.textContent = 'Please fill in all required fields.';
+            errorDiv.classList.remove('hidden');
+          }
+          return;
+        }
+        if (errorDiv) {
+          errorDiv.classList.add('hidden');
+        }
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, service, message })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            contactForm.reset();
+            if (errorDiv) {
+              errorDiv.textContent = 'Thank you for your message! We will get back to you soon.';
+              errorDiv.classList.remove('hidden');
+              errorDiv.classList.remove('bg-red-50', 'text-red-500');
+              errorDiv.classList.add('bg-green-50', 'text-green-600');
+            }
+          } else {
+            if (errorDiv) {
+              errorDiv.textContent = data.error || 'Submission failed.';
+              errorDiv.classList.remove('hidden');
+              errorDiv.classList.remove('bg-green-50', 'text-green-600');
+              errorDiv.classList.add('bg-red-50', 'text-red-500');
+            }
+          }
+        } catch (err) {
+          if (errorDiv) {
+            errorDiv.textContent = 'Server error. Please try again later.';
+            errorDiv.classList.remove('hidden');
+            errorDiv.classList.remove('bg-green-50', 'text-green-600');
+            errorDiv.classList.add('bg-red-50', 'text-red-500');
+          }
+        }
+      });
+    }
+    </script>
 </body>
 </html>
